@@ -5,31 +5,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Main2Activity">
+    tools:context=".Main2Activity"
+    android:weightSum="7"
+    >
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/raw"
         android:layout_width="match_parent"
-        android:layout_height="600dp"
-        android:scaleType="center"/>
+        android:layout_height="wrap_content"
+        android:layout_weight="6"
+        />
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="2">
+        android:weightSum="2"
+        android:id="@+id/linear_buttons"
+        android:layout_weight="1"
+        >
 
         <Button
-            android:id="@+id/zoom_in"
+            android:id="@+id/downloadImage"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:text="Zoom in"
+            android:text="Download Image"
+            android:background="#FF5900"
             android:layout_weight="1"/>
         <Button
-            android:id="@+id/zoom_out"
+            android:id="@+id/showInfo"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:text="Zoom out"
-            android:layout_weight="1"/>
+            android:text=" Show Info"
+            android:layout_weight="1"
+            android:background="#FF5900"
+            />
 
     </LinearLayout>
 

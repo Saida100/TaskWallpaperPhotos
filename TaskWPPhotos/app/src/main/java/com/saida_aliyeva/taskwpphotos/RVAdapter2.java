@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 
-public class RVAdapter extends RecyclerView.Adapter<RVViewHolder>{
+public class RVAdapter2 extends RecyclerView.Adapter<RVViewHolder2>{
 
-    List<Urls> urlsList;
+    List<Example> urlsList;
     Context context;
     Listener listener;
 
-    public RVAdapter(List<Urls> urlsList, Context context, Listener listener) {
+    public RVAdapter2(List<Example> urlsList, Context context, Listener listener) {
         this.urlsList = urlsList;
         this.context = context;
         this.listener = listener;
@@ -25,13 +25,13 @@ public class RVAdapter extends RecyclerView.Adapter<RVViewHolder>{
 
     @NonNull
     @Override
-    public RVViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RVViewHolder2 onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(context).inflate(R.layout.list_items,parent,false);
-        return new RVViewHolder(view);
+        return new RVViewHolder2(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RVViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RVViewHolder2 holder, int position) {
         holder.bind(urlsList.get(position),listener);
 
 
@@ -41,6 +41,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVViewHolder>{
     public int getItemCount() {
         return urlsList.size();
     }
+
 
     @Override
     public long getItemId(int position) {

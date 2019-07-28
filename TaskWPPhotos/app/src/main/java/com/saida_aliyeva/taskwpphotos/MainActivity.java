@@ -19,7 +19,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
     Urls urls;
     RecyclerView recyclerView;
-    RVAdapter rvAdapter;
+    RVAdapter2 rvAdapter2;
     List<Urls> urlsList;
 
     @Override
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
                 .enqueue(new Callback<List<Example>>() {
                     @Override
                     public void onResponse(Call<List<Example>> call, Response<List<Example>> response) {
-                    List<Example> exampleList = response.body();
+                        final List<Example> exampleList = response.body();
                         Log.e("exampleList", response.body().toString());
                         urlsList = new ArrayList<>();
                         for (int i = 0; i < exampleList.size(); i++) {
@@ -46,25 +46,36 @@ public class MainActivity extends AppCompatActivity {
                             urls.setRegular(exampleList.get(i).getUrls().getRegular());
                             urls.setSmall(exampleList.get(i).getUrls().getSmall());
                             urls.setThumb(exampleList.get(i).getUrls().getThumb());
-                                urlsList.add(urls);
+                            urlsList.add(urls);
 
                         }
-                        rvAdapter = new RVAdapter(urlsList, getApplicationContext(), new Listener() {
+                        rvAdapter2 = new RVAdapter2(exampleList, getApplicationContext(), new Listener() {
 
                             @Override
                             public void onPhotoClick(Urls urls) {
-                                Intent intent=new Intent(MainActivity.this,Main2Activity.class);
-                                Bundle bundle=new Bundle();
-                                bundle.putString("image",urls.getFull().toString());
-                                intent.putExtras(bundle);
-                                startActivity(intent);
+
 
                             }
 
+                            @Override
+                            public void onPhotoClick(Example example) {
+                                Intent intent = new Intent(MainActivity.this, Main2Activity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("image", example.getUrls().getThumb());
+                                bundle.putString("created_at", example.getCreatedAt());
+                                bundle.putString("updated_at", example.getUpdatedAt());
+                                bundle.putString("color", example.getColor());
+                                bundle.putString("width", String.valueOf(example.getWidth()));
+                                bundle.putString("height", String.valueOf(example.getHeight()));
+                                bundle.putString("alt_description", example.getAlt_description());
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                            }
+
                         });
-                        StaggeredGridLayoutManager   staggeredGridLayoutManager = new StaggeredGridLayoutManager(2,LinearLayoutManager.VERTICAL);
+                        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
                         recyclerView.setLayoutManager(staggeredGridLayoutManager);
-                        recyclerView.setAdapter(rvAdapter);
+                        recyclerView.setAdapter(rvAdapter2);
 
 
                     }
@@ -75,8 +86,6 @@ public class MainActivity extends AppCompatActivity {
                         t.printStackTrace();
                     }
                 });
-
-
 
 
     }

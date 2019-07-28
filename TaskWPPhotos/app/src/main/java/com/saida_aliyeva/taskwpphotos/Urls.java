@@ -3,7 +3,11 @@ package com.saida_aliyeva.taskwpphotos;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Urls {
+
 
     @SerializedName("raw")
     @Expose
@@ -20,6 +24,9 @@ public class Urls {
     @SerializedName("thumb")
     @Expose
     private String thumb;
+
+
+
 
     public String getRaw() {
         return raw;
@@ -60,6 +67,19 @@ public class Urls {
     public void setThumb(String thumb) {
         this.thumb = thumb;
     }
+
+
+
+//    public static List<Urls> createUrls(int itemCount) {
+//        List<Urls> urlsList = new ArrayList<>();
+//        for (int i = 0; i < 10; i++) {
+//            Urls urls = new Urls("Urls " + (itemCount == 0 ?
+//                    (itemCount + 1 + i) : (itemCount + i)));
+//            urlsList.add(urls);
+//        }
+//        return urlsList;
+//    }
+
 
     @Override
     public String toString() {
