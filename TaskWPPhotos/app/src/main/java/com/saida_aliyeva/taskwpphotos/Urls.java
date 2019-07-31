@@ -70,15 +70,6 @@ public class Urls {
 
 
 
-//    public static List<Urls> createUrls(int itemCount) {
-//        List<Urls> urlsList = new ArrayList<>();
-//        for (int i = 0; i < 10; i++) {
-//            Urls urls = new Urls("Urls " + (itemCount == 0 ?
-//                    (itemCount + 1 + i) : (itemCount + i)));
-//            urlsList.add(urls);
-//        }
-//        return urlsList;
-//    }
 
 
     @Override

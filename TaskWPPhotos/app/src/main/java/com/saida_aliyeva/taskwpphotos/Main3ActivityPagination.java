@@ -1,12 +1,14 @@
 package com.saida_aliyeva.taskwpphotos;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -16,18 +18,24 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
-    Urls urls;
+public class Main3ActivityPagination extends AppCompatActivity implements InfiniteScrollListener.OnLoadMoreListener {
     RecyclerView recyclerView;
-    RVAdapter2 rvAdapter2;
-    List<Urls> urlsList;
+    List<Urls> urlsList = new ArrayList<>();
+    InfiniteScrollListener infiniteScrollListener;
+    CustomAdapter adapter;
+    Urls urls;
+    List<Example> exampleList = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        urlsList = new ArrayList<>();
+        setContentView(R.layout.activity_main3_pagination);
         recyclerView = findViewById(R.id.recyclerView);
+
+        final StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
+        infiniteScrollListener = new InfiniteScrollListener(staggeredGridLayoutManager, this);
+
         ApiInit apiInit = new ApiInit();
         apiInit.initRetrofit();
         APIInterface apiInterface = apiInit.getClient();
@@ -35,11 +43,11 @@ public class MainActivity extends AppCompatActivity {
                 .enqueue(new Callback<List<Example>>() {
                     @Override
                     public void onResponse(Call<List<Example>> call, Response<List<Example>> response) {
-                        final List<Example> exampleList = response.body();
-                        Log.e("exampleList", response.body().toString());
+                        exampleList = response.body();
+                        Log.e("exampleList2", response.body().toString());
                         urlsList = new ArrayList<>();
                         for (int i = 0; i < exampleList.size(); i++) {
-                            Log.e("exampleList(i)", exampleList.get(i).toString());
+                            Log.e("exampleList2(i)", exampleList.get(i).toString());
                             urls = new Urls();
                             urls.setRaw(exampleList.get(i).getUrls().getRaw());
                             urls.setFull(exampleList.get(i).getUrls().getFull());
@@ -49,17 +57,16 @@ public class MainActivity extends AppCompatActivity {
                             urlsList.add(urls);
 
                         }
-                        rvAdapter2 = new RVAdapter2(exampleList, getApplicationContext(), new Listener() {
+                        recyclerView.setLayoutManager(staggeredGridLayoutManager);
+                        infiniteScrollListener.setLoaded();
+                        recyclerView.addOnScrollListener(infiniteScrollListener);
+                        recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
+                        adapter = new CustomAdapter(getApplicationContext(), exampleList, new Listener() {
 
-                            @Override
-                            public void onPhotoClick(Urls urls) {
-
-
-                            }
 
                             @Override
                             public void onPhotoClick(Example example) {
-                                Intent intent = new Intent(MainActivity.this, Main2Activity.class);
+                                Intent intent = new Intent(Main3ActivityPagination.this, Main2Activity.class);
                                 Bundle bundle = new Bundle();
                                 bundle.putString("image", example.getUrls().getThumb());
                                 bundle.putString("created_at", example.getCreatedAt());
@@ -71,15 +78,9 @@ public class MainActivity extends AppCompatActivity {
                                 intent.putExtras(bundle);
                                 startActivity(intent);
                             }
-
                         });
-                        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
-                        recyclerView.setLayoutManager(staggeredGridLayoutManager);
-                        recyclerView.setAdapter(rvAdapter2);
-
-
+                        recyclerView.setAdapter(adapter);
                     }
-
 
                     @Override
                     public void onFailure(Call<List<Example>> call, Throwable t) {
@@ -90,5 +91,23 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onLoadMore() {
+        adapter.addNullData();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                adapter.removeNull();
+                Log.e("exampleListOnLoad", "called");
+                List<Example> exampleList2 = new ArrayList<>();
+                for (int i = 0; i < 10; i++) {
+                    Log.e("exampleList.get(i)", String.valueOf(exampleList.get(i)));
+                    exampleList2.add(exampleList.get(i));
+                }
+                adapter.addData(exampleList);
+                infiniteScrollListener.setLoaded();
 
+            }
+        }, 2000);
+    }
 }
